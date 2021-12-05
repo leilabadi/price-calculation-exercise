@@ -26,16 +26,12 @@ namespace PriceCalculationExercise.UnitTests
 
             discounts = new IDiscount[]
             {
-                new Discount(new IDiscountCondition[]
-                    {
-                        new QualifyingItemCondition(productButter, 2)
-                    }.ToList(),
+                new Discount(
+                    new QualifyingItemCondition(productButter, 2),
                     new PercentageOffOutcome(50),
                     new ItemTarget(productBread)),
-                new Discount(new IDiscountCondition[]
-                    {
-                        new QualifyingItemCondition(productMilk, 4)
-                    }.ToList(),
+                new Discount(
+                    new QualifyingItemCondition(productMilk, 4),
                     new PercentageOffOutcome(100),
                     new ItemTarget(productMilk))
             }.ToList();

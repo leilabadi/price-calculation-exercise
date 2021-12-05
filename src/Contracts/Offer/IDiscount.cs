@@ -4,7 +4,7 @@ namespace PriceCalculationExercise.Contracts.Offer
 {
     public interface IDiscount
     {
-        IReadOnlyList<IDiscountCondition> Conditions { get; }
+        IDiscountCondition Condition { get; }
 
         IDiscountOutcome Outcome { get; }
 

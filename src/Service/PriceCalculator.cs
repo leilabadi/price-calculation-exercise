@@ -1,4 +1,5 @@
-﻿using PriceCalculationExercise.Contracts;
+﻿using System.Linq;
+using PriceCalculationExercise.Contracts;
 
 namespace PriceCalculationExercise.Service
 {
@@ -6,7 +7,7 @@ namespace PriceCalculationExercise.Service
     {
         public decimal CalculateTotalCost(IBasket basket)
         {
-            return 0;
+            return basket.Items.Sum(p => p.Quantity * p.Product.Price);
         }
     }
 }
