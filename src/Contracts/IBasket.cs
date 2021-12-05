@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using PriceCalculationExercise.Contracts.Offer;
 
 namespace PriceCalculationExercise.Contracts
 {

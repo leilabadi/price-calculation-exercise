@@ -3,7 +3,9 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using PriceCalculationExercise.Contracts;
+using PriceCalculationExercise.Contracts.Offer;
 using PriceCalculationExercise.Domain;
+using PriceCalculationExercise.Domain.Offer;
 using PriceCalculationExercise.Service;
 using Xunit;
 
@@ -24,8 +26,18 @@ namespace PriceCalculationExercise.UnitTests
 
             discounts = new IDiscount[]
             {
-                new Discount(),
-                new Discount()
+                new Discount(new IDiscountCondition[]
+                    {
+                        new QualifyingItemCondition(productButter, 2)
+                    }.ToList(),
+                    new PercentageOffOutcome(50),
+                    new ItemTarget(productBread)),
+                new Discount(new IDiscountCondition[]
+                    {
+                        new QualifyingItemCondition(productMilk, 4)
+                    }.ToList(),
+                    new PercentageOffOutcome(100),
+                    new ItemTarget(productMilk))
             }.ToList();
         }
 
