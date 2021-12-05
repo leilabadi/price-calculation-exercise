@@ -6,7 +6,7 @@ namespace PriceCalculationExercise.Contracts
     {
         ICustomer Customer { get; }
 
-        IReadOnlyList<IProduct> Products { get; }
+        IReadOnlyList<IBasketItem> Items { get; }
 
         IReadOnlyList<IDiscount> Discounts { get; }
 

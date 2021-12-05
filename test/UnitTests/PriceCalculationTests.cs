@@ -1,4 +1,7 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using FluentAssertions;
+using Moq;
 using PriceCalculationExercise.Contracts;
 using PriceCalculationExercise.Domain;
 using PriceCalculationExercise.Service;
@@ -8,30 +11,43 @@ namespace PriceCalculationExercise.UnitTests
 {
     public class PriceCalculationTests
     {
-        private readonly IProduct ProductBread;
-        private readonly IProduct ProductButter;
-        private readonly IProduct ProductMilk;
+        private readonly IProduct productBread;
+        private readonly IProduct productButter;
+        private readonly IProduct productMilk;
+        private readonly List<IDiscount> discounts;
 
         public PriceCalculationTests()
         {
-            ProductBread = new Product("Bread", 1.00m);
-            ProductButter = new Product("Butter", 0.80m);
-            ProductMilk = new Product("Milk", 1.15m);
+            productBread = new Product("Bread", 1.00m);
+            productButter = new Product("Butter", 0.80m);
+            productMilk = new Product("Milk", 1.15m);
+
+            discounts = new IDiscount[]
+            {
+                new Discount(),
+                new Discount()
+            }.ToList();
         }
 
         [Fact]
         public void Should_not_apply_discount_when_basket_does_not_qualify_for_any_discounts()
         {
             // Arrange
-            IBasket basket = new Basket();
-            basket.AddProduct(ProductBread, 1);
-            basket.AddProduct(ProductButter, 1);
-            basket.AddProduct(ProductMilk, 1);
+            var basketItems = new IBasketItem[]
+            {
+                new BasketItem(productBread, 1),
+                new BasketItem(productButter, 1),
+                new BasketItem(productMilk, 1)
+            }.ToList();
+
+            var basket = new Mock<IBasket>();
+            basket.Setup(p => p.Items).Returns(basketItems);
+            basket.Setup(p => p.Discounts).Returns(discounts);
 
             IPriceCalculator priceCalculator = new PriceCalculator();
 
             // Act
-            var total = priceCalculator.CalculateTotalCost(basket);
+            var total = priceCalculator.CalculateTotalCost(basket.Object);
 
             // Assert
             total.Should().Be(2.95m);
@@ -41,14 +57,20 @@ namespace PriceCalculationExercise.UnitTests
         public void Should_apply_half_price_bread_discount_when_basket_has_two_butter()
         {
             // Arrange
-            IBasket basket = new Basket();
-            basket.AddProduct(ProductBread, 2);
-            basket.AddProduct(ProductButter, 2);
+            var basketItems = new IBasketItem[]
+            {
+                new BasketItem(productBread, 2),
+                new BasketItem(productButter, 2)
+            }.ToList();
+
+            var basket = new Mock<IBasket>();
+            basket.Setup(p => p.Items).Returns(basketItems);
+            basket.Setup(p => p.Discounts).Returns(discounts);
 
             IPriceCalculator priceCalculator = new PriceCalculator();
 
             // Act
-            var total = priceCalculator.CalculateTotalCost(basket);
+            var total = priceCalculator.CalculateTotalCost(basket.Object);
 
             // Assert
             total.Should().Be(3.10m);
@@ -58,13 +80,19 @@ namespace PriceCalculationExercise.UnitTests
         public void Should_apply_free_milk_discount_when_basket_has_four_milk()
         {
             // Arrange
-            IBasket basket = new Basket();
-            basket.AddProduct(ProductMilk, 4);
+            var basketItems = new IBasketItem[]
+            {
+                new BasketItem(productMilk, 4)
+            }.ToList();
+
+            var basket = new Mock<IBasket>();
+            basket.Setup(p => p.Items).Returns(basketItems);
+            basket.Setup(p => p.Discounts).Returns(discounts);
 
             IPriceCalculator priceCalculator = new PriceCalculator();
 
             // Act
-            var total = priceCalculator.CalculateTotalCost(basket);
+            var total = priceCalculator.CalculateTotalCost(basket.Object);
 
             // Assert
             total.Should().Be(3.45m);
@@ -74,15 +102,21 @@ namespace PriceCalculationExercise.UnitTests
         public void Should_apply_free_milk_and_half_price_bread_discount_when_basket_has_eight_milk_and_two_butter()
         {
             // Arrange
-            IBasket basket = new Basket();
-            basket.AddProduct(ProductBread, 1);
-            basket.AddProduct(ProductButter, 2);
-            basket.AddProduct(ProductMilk, 8);
+            var basketItems = new IBasketItem[]
+            {
+                new BasketItem(productBread, 1),
+                new BasketItem(productButter, 2),
+                new BasketItem(productMilk, 8)
+            }.ToList();
+
+            var basket = new Mock<IBasket>();
+            basket.Setup(p => p.Items).Returns(basketItems);
+            basket.Setup(p => p.Discounts).Returns(discounts);
 
             IPriceCalculator priceCalculator = new PriceCalculator();
 
             // Act
-            var total = priceCalculator.CalculateTotalCost(basket);
+            var total = priceCalculator.CalculateTotalCost(basket.Object);
 
             // Assert
             total.Should().Be(9.00m);

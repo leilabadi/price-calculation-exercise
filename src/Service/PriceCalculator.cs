@@ -6,7 +6,7 @@ namespace PriceCalculationExercise.Service
     {
         public decimal CalculateTotalCost(IBasket basket)
         {
-            throw new System.NotImplementedException();
+            return 0;
         }
     }
 }
