@@ -4,6 +4,8 @@
     {
         IProduct Product { get; }
 
-        int Quantity { get; }
+        decimal CalculatedPrice { get; set; }
+
+        bool DiscountApplied { get; }
     }
 }

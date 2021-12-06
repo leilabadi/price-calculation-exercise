@@ -22,9 +22,17 @@ namespace PriceCalculationExercise.Service
             this.discounts = discounts;
         }
 
+        public void AddProduct(IProduct product)
+        {
+            items.Add(new BasketItem(new Product(product)));
+        }
+
         public void AddProduct(IProduct product, int quantity)
         {
-            items.Add(new BasketItem(new Product(product), quantity));
+            for (int i = 0; i < quantity; i++)
+            {
+                AddProduct(product);
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace PriceCalculationExercise.Domain.Offer
 
         public ItemTarget(IProduct product)
         {
-            Product = product;
+            Product = new Product(product);
         }
     }
 }

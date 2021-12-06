@@ -6,18 +6,20 @@ namespace PriceCalculationExercise.Domain
     {
         public IProduct Product { get; }
 
-        public int Quantity { get; }
+        public decimal CalculatedPrice { get; set; }
 
-        public BasketItem(IProduct product, int quantity)
+        public bool DiscountApplied => CalculatedPrice != Product.Price;
+
+        public BasketItem(IProduct product)
         {
             Product = product;
-            Quantity = quantity;
+            CalculatedPrice = product.Price;
         }
 
         public BasketItem(IBasketItem basketItem)
         {
             Product = new Product(basketItem.Product);
-            Quantity = basketItem.Quantity;
+            CalculatedPrice = basketItem.CalculatedPrice;
         }
     }
 }

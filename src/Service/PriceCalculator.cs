@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using PriceCalculationExercise.Contracts;
+using PriceCalculationExercise.Contracts.Offer;
 using PriceCalculationExercise.Domain;
 using PriceCalculationExercise.Domain.Offer;
 
@@ -12,43 +14,81 @@ namespace PriceCalculationExercise.Service
         public decimal CalculateTotalCost(IBasket basket)
         {
             var dictionary = CopyItemsToDictionary(basket);
-            var basketItems = basket.Items.ToList().ConvertAll(item => new BasketItem(item));
-
-            var total = basket.Items.Sum(x => x.Quantity * x.Product.Price);
 
             foreach (var offer in basket.Discounts)
             {
-                var qualifyingItem = (QualifyingItemCondition)offer.Condition;
+                var outcomeFunc = GenerateOutcomeFunc(offer);
 
-                foreach (var (product, quantity) in dictionary)
+                switch (offer.Condition)
                 {
-                    if (!qualifyingItem.Product.Equals(product)) continue;
+                    case QualifyingItemCondition qualifyingItem:
+                        foreach (var (product, list) in dictionary)
+                        {
+                            if (!qualifyingItem.Product.Equals(product)) continue;
 
-                    var remaining = quantity;
-                    while (remaining - qualifyingItem.Count >= 0)
-                    {
-                        remaining -= qualifyingItem.Count;
+                            var numberOfMatches = list.Count / qualifyingItem.Count;
+                            switch (offer.Target)
+                            {
+                                case ItemTarget offerTarget:
+                                    dictionary[offerTarget.Product]
+                                        .Where(x => !x.DiscountApplied)
+                                        .Take(numberOfMatches)
+                                        .ToList()
+                                        .ForEach(p => p.CalculatedPrice -= outcomeFunc(p.Product.Price));
 
-                        var offerTarget = (ItemTarget)offer.Target;
-                        var targetItem = basketItems.SingleOrDefault(x => x.Product.Equals(offerTarget.Product));
-                        if (targetItem == null) continue;
+                                    break;
+                                default:
+                                    throw new Exception("Unsupported discount target");
+                            }
+                        }
 
-                        var percentage = ((PercentageOffOutcome)offer.Outcome).Percentage;
-                        total -= targetItem.Product.Price * percentage / 100m;
-                    }
+                        break;
+                    default:
+                        throw new Exception("Unsupported discount condition");
                 }
             }
 
+            var total = basket.Items.Sum(x => x.CalculatedPrice);
             return total;
         }
 
-        private static IReadOnlyDictionary<IProduct, int> CopyItemsToDictionary(IBasket basket)
+        private static Func<decimal, decimal> GenerateOutcomeFunc(IDiscount offer)
         {
-            var pairs = basket.Items.ToList().ConvertAll(p => new KeyValuePair<IProduct, int>(new Product(p.Product), p.Quantity));
+            Func<decimal, decimal> outcomeFunc;
+            switch (offer.Outcome)
+            {
+                case PercentageOffOutcome percentageOffOutcome:
+                    outcomeFunc = price => price * percentageOffOutcome.Percentage / 100m;
+                    break;
+                default:
+                    throw new Exception("Unsupported discount outcome");
+            }
 
-            var dictionary = new Dictionary<IProduct, int>(pairs);
+            return outcomeFunc;
+        }
 
-            return new ReadOnlyDictionary<IProduct, int>(dictionary);
+        private static IReadOnlyDictionary<IProduct, IReadOnlyList<IBasketItem>> CopyItemsToDictionary(IBasket basket)
+        {
+            var dictionary1 = new Dictionary<IProduct, List<IBasketItem>>();
+            foreach (var item in basket.Items)
+            {
+                if (!dictionary1.ContainsKey(item.Product))
+                {
+                    dictionary1[item.Product] = new List<IBasketItem> { item };
+                }
+                else
+                {
+                    dictionary1[item.Product].Add(item);
+                }
+            }
+
+            var dictionary2 = new Dictionary<IProduct, IReadOnlyList<IBasketItem>>();
+            foreach (var (key, value) in dictionary1)
+            {
+                dictionary2.Add(key, value);
+            }
+
+            return new ReadOnlyDictionary<IProduct, IReadOnlyList<IBasketItem>>(dictionary2);
         }
     }
 }

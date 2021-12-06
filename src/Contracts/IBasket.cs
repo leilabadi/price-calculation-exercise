@@ -11,6 +11,8 @@ namespace PriceCalculationExercise.Contracts
 
         IReadOnlyList<IDiscount> Discounts { get; }
 
+        void AddProduct(IProduct product);
+        
         void AddProduct(IProduct product, int quantity);
     }
 }
