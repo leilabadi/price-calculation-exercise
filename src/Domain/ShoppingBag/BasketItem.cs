@@ -1,6 +1,7 @@
 ﻿using PriceCalculationExercise.Contracts;
+using PriceCalculationExercise.Contracts.ShoppingBag;
 
-namespace PriceCalculationExercise.Domain
+namespace PriceCalculationExercise.Domain.ShoppingBag
 {
     public class BasketItem : IBasketItem
     {

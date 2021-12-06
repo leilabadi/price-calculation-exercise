@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using PriceCalculationExercise.Contracts;
 using PriceCalculationExercise.Contracts.Offer;
+using PriceCalculationExercise.Contracts.ShoppingBag;
 using PriceCalculationExercise.Domain;
+using PriceCalculationExercise.Domain.ShoppingBag;
 
-namespace PriceCalculationExercise.Service
+namespace PriceCalculationExercise.Service.ShoppingBag
 {
     public class Basket : IBasket
     {

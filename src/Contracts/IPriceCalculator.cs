@@ -1,4 +1,6 @@
-﻿namespace PriceCalculationExercise.Contracts
+﻿using PriceCalculationExercise.Contracts.ShoppingBag;
+
+namespace PriceCalculationExercise.Contracts
 {
     public interface IPriceCalculator
     {

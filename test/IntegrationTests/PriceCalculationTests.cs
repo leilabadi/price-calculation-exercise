@@ -7,6 +7,7 @@ using PriceCalculationExercise.Contracts.Offer;
 using PriceCalculationExercise.Domain;
 using PriceCalculationExercise.Domain.Offer;
 using PriceCalculationExercise.Service;
+using PriceCalculationExercise.Service.ShoppingBag;
 using Xunit;
 
 namespace PriceCalculationExercise.IntegrationTests

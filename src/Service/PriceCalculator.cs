@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using PriceCalculationExercise.Contracts;
 using PriceCalculationExercise.Contracts.Offer;
-using PriceCalculationExercise.Domain;
+using PriceCalculationExercise.Contracts.ShoppingBag;
 using PriceCalculationExercise.Domain.Offer;
 
 namespace PriceCalculationExercise.Service

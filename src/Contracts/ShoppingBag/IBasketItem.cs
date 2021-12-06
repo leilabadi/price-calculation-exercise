@@ -1,4 +1,4 @@
-﻿namespace PriceCalculationExercise.Contracts
+﻿namespace PriceCalculationExercise.Contracts.ShoppingBag
 {
     public interface IBasketItem
     {
