@@ -23,6 +23,10 @@ namespace PriceCalculationExercise.IntegrationTests
         {
             customerMock = new Mock<ICustomer>();
 
+            productBread = new Product("Bread", 1.00m);
+            productButter = new Product("Butter", 0.80m);
+            productMilk = new Product("Milk", 1.15m);
+
             discounts = new IDiscount[]
             {
                 new Discount(
@@ -34,10 +38,6 @@ namespace PriceCalculationExercise.IntegrationTests
                     new PercentageOffOutcome(100),
                     new ItemTarget(productMilk))
             }.ToList();
-
-            productBread = new Product("Bread", 1.00m);
-            productButter = new Product("Butter", 0.80m);
-            productMilk = new Product("Milk", 1.15m);
         }
 
         [Fact]
