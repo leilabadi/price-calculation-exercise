@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Moq;
 using PriceCalculationExercise.Contracts;
-using PriceCalculationExercise.Contracts.Offer;
 using PriceCalculationExercise.Domain;
-using PriceCalculationExercise.Domain.Offer;
-using PriceCalculationExercise.Service;
 using PriceCalculationExercise.Service.ShoppingBag;
 using Xunit;
 
@@ -60,7 +56,7 @@ namespace PriceCalculationExercise.UnitTests
         }
 
         [Fact]
-        public void Should_contain_two_item_of_the_same_product_when_a_product_is_added_with_2_quantities()
+        public void Basket_should_contain_two_item_of_the_same_product_when_a_product_is_added_with_2_quantities()
         {
             // Arrange
             var basket = new Basket(customerMock.Object);
@@ -71,6 +67,27 @@ namespace PriceCalculationExercise.UnitTests
             // Assert
             basket.Items.Should().HaveCount(2);
             basket.Items.Select(p => p.Product).Should().AllBeEquivalentTo(productBread);
+        }
+
+        [Fact]
+        public void Basket_items_should_be_immutable()
+        {
+            // Arrange
+            var b1 = new Basket(customerMock.Object);
+            var b2 = new Basket(customerMock.Object);
+            var bread = new Product("Bread", 2);
+
+            b1.AddProduct(bread);
+            b2.AddProduct(bread);
+
+            const int newPrice = 1;
+
+            // Act
+            b1.Items[0].CalculatedPrice = newPrice;
+
+            // Assert
+
+            b2.Items[0].CalculatedPrice.Should().NotBe(newPrice);
         }
     }
 }
