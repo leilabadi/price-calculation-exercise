@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PriceCalculationExercise.Contracts;
 using PriceCalculationExercise.Contracts.Offer;
 using PriceCalculationExercise.Contracts.ShoppingBag;
@@ -21,7 +22,11 @@ namespace PriceCalculationExercise.Service.ShoppingBag
         {
             Customer = customer;
             this.items = new List<IBasketItem>();
-            this.discounts = discounts;
+            this.discounts = discounts ?? throw new Exception("The discounts can not be null. Use the constructor without discount.");
+        }
+
+        public Basket(ICustomer customer) : this(customer, new List<IDiscount>())
+        {
         }
 
         public void AddProduct(IProduct product)
