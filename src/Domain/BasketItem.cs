@@ -13,5 +13,11 @@ namespace PriceCalculationExercise.Domain
             Product = product;
             Quantity = quantity;
         }
+
+        public BasketItem(IBasketItem basketItem)
+        {
+            Product = new Product(basketItem.Product);
+            Quantity = basketItem.Quantity;
+        }
     }
 }
