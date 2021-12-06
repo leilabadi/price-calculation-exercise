@@ -9,7 +9,7 @@ using PriceCalculationExercise.Domain.Offer;
 using PriceCalculationExercise.Service;
 using Xunit;
 
-namespace PriceCalculationExercise.UnitTests
+namespace PriceCalculationExercise.IntegrationTests
 {
     public class PriceCalculationTests
     {
@@ -43,19 +43,19 @@ namespace PriceCalculationExercise.UnitTests
             // Arrange
             var basketItems = new IBasketItem[]
             {
-                new BasketItem(productBread, 1),
-                new BasketItem(productButter, 1),
-                new BasketItem(productMilk, 1)
+                new BasketItem(new Product(productBread), 1),
+                new BasketItem(new Product(productButter), 1),
+                new BasketItem(new Product(productMilk), 1)
             }.ToList();
 
             var basket = new Mock<IBasket>();
             basket.Setup(p => p.Items).Returns(basketItems);
             basket.Setup(p => p.Discounts).Returns(discounts);
 
-            IPriceCalculator priceCalculator = new PriceCalculator();
+            var sut = new PriceCalculator();
 
             // Act
-            var total = priceCalculator.CalculateTotalCost(basket.Object);
+            var total = sut.CalculateTotalCost(basket.Object);
 
             // Assert
             total.Should().Be(2.95m);
@@ -67,18 +67,18 @@ namespace PriceCalculationExercise.UnitTests
             // Arrange
             var basketItems = new IBasketItem[]
             {
-                new BasketItem(productBread, 2),
-                new BasketItem(productButter, 2)
+                new BasketItem(new Product(productBread), 2),
+                new BasketItem(new Product(productButter), 2)
             }.ToList();
 
             var basket = new Mock<IBasket>();
             basket.Setup(p => p.Items).Returns(basketItems);
             basket.Setup(p => p.Discounts).Returns(discounts);
 
-            IPriceCalculator priceCalculator = new PriceCalculator();
+            var sut = new PriceCalculator();
 
             // Act
-            var total = priceCalculator.CalculateTotalCost(basket.Object);
+            var total = sut.CalculateTotalCost(basket.Object);
 
             // Assert
             total.Should().Be(3.10m);
@@ -90,17 +90,17 @@ namespace PriceCalculationExercise.UnitTests
             // Arrange
             var basketItems = new IBasketItem[]
             {
-                new BasketItem(productMilk, 4)
+                new BasketItem(new Product(productMilk), 4)
             }.ToList();
 
             var basket = new Mock<IBasket>();
             basket.Setup(p => p.Items).Returns(basketItems);
             basket.Setup(p => p.Discounts).Returns(discounts);
 
-            IPriceCalculator priceCalculator = new PriceCalculator();
+            var sut = new PriceCalculator();
 
             // Act
-            var total = priceCalculator.CalculateTotalCost(basket.Object);
+            var total = sut.CalculateTotalCost(basket.Object);
 
             // Assert
             total.Should().Be(3.45m);
@@ -112,19 +112,19 @@ namespace PriceCalculationExercise.UnitTests
             // Arrange
             var basketItems = new IBasketItem[]
             {
-                new BasketItem(productBread, 1),
-                new BasketItem(productButter, 2),
-                new BasketItem(productMilk, 8)
+                new BasketItem(new Product(productBread), 1),
+                new BasketItem(new Product(productButter), 2),
+                new BasketItem(new Product(productMilk), 8)
             }.ToList();
 
             var basket = new Mock<IBasket>();
             basket.Setup(p => p.Items).Returns(basketItems);
             basket.Setup(p => p.Discounts).Returns(discounts);
 
-            IPriceCalculator priceCalculator = new PriceCalculator();
+            var sut = new PriceCalculator();
 
             // Act
-            var total = priceCalculator.CalculateTotalCost(basket.Object);
+            var total = sut.CalculateTotalCost(basket.Object);
 
             // Assert
             total.Should().Be(9.00m);
