@@ -109,5 +109,87 @@ namespace PriceCalculationExercise.IntegrationTests
             // Assert
             total.Should().Be(9.00m);
         }
+
+        [Fact]
+        public void Money_off_item_discount()
+        {
+            // Arrange
+            var discounts = new List<IDiscount>(new[]
+            {
+                new Discount(new QualifyingItemCondition(productMilk, 2),
+                    new MoneyOffOutcome(0.10m),
+                    new ItemTarget(productMilk))
+            });
+
+            var basket = new Basket(customerMock.Object, discounts);
+            basket.AddProduct(new Product(productButter), 1);
+            basket.AddProduct(new Product(productMilk), 2);
+
+            var sut = new PriceCalculator();
+
+            // Act
+            var total = sut.CalculateTotalCost(basket);
+
+            // Assert
+            total.Should().Be(3.00m);
+        }
+
+        [Fact]
+        public void Free_item_discount()
+        {
+            // Arrange
+            var discounts = new List<IDiscount>(new[]
+            {
+                new Discount(new QualifyingItemCondition(productMilk, 2),
+                    new FreeItemOutcome(),
+                    new ItemTarget(productMilk))
+            });
+
+            var basket = new Basket(customerMock.Object, discounts);
+            basket.AddProduct(new Product(productButter), 1);
+            basket.AddProduct(new Product(productMilk), 2);
+
+            var sut = new PriceCalculator();
+
+            // Act
+            var total = sut.CalculateTotalCost(basket);
+
+            // Assert
+            total.Should().Be(1.95m);
+        }
+
+        [Fact]
+        public void Complex_discount()
+        {
+        }
+
+        [Fact]
+        public void Free_shipping_discount()
+        {
+        }
+
+        [Fact]
+        public void Money_off_bag_discount()
+        {
+            // Arrange
+            var discounts = new List<IDiscount>(new[]
+            {
+                new Discount(new QualifyingItemCondition(productMilk, 2),
+                    new MoneyOffOutcome(0.50m),
+                    new BasketTarget())
+            });
+
+            var basket = new Basket(customerMock.Object, discounts);
+            basket.AddProduct(new Product(productButter), 1);
+            basket.AddProduct(new Product(productMilk), 2);
+
+            var sut = new PriceCalculator();
+
+            // Act
+            var total = sut.CalculateTotalCost(basket);
+
+            // Assert
+            total.Should().Be(2.60m);
+        }
     }
 }

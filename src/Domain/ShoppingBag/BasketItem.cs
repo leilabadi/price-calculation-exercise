@@ -22,5 +22,10 @@ namespace PriceCalculationExercise.Domain.ShoppingBag
             Product = new Product(basketItem.Product);
             CalculatedPrice = basketItem.CalculatedPrice;
         }
+
+        public override string ToString()
+        {
+            return $"{Product.Name}: £{CalculatedPrice} (was {Product.Price})";
+        }
     }
 }

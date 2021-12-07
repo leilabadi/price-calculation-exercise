@@ -13,6 +13,7 @@ namespace PriceCalculationExercise.Service
     {
         public decimal CalculateTotalCost(IBasket basket)
         {
+            decimal basketMoneyOff = 0;
             var dictionary = CopyItemsToDictionary(basket);
 
             foreach (var offer in basket.Discounts)
@@ -37,6 +38,10 @@ namespace PriceCalculationExercise.Service
                                         .ForEach(p => p.CalculatedPrice -= outcomeFunc(p.Product.Price));
 
                                     break;
+                                case BasketTarget offerTarget:
+                                    basketMoneyOff += outcomeFunc(0);
+
+                                    break;
                                 default:
                                     throw new Exception("Unsupported discount target");
                             }
@@ -48,7 +53,7 @@ namespace PriceCalculationExercise.Service
                 }
             }
 
-            var total = basket.Items.Sum(x => x.CalculatedPrice);
+            var total = basket.Items.Sum(x => x.CalculatedPrice) - basketMoneyOff;
             return total;
         }
 
@@ -57,8 +62,14 @@ namespace PriceCalculationExercise.Service
             Func<decimal, decimal> outcomeFunc;
             switch (offer.Outcome)
             {
-                case PercentageOffOutcome percentageOffOutcome:
-                    outcomeFunc = price => price * percentageOffOutcome.Percentage / 100m;
+                case PercentageOffOutcome outcome:
+                    outcomeFunc = price => price * outcome.Percentage / 100m;
+                    break;
+                case MoneyOffOutcome outcome:
+                    outcomeFunc = price => outcome.Amount;
+                    break;
+                case FreeItemOutcome outcome:
+                    outcomeFunc = price => price;
                     break;
                 default:
                     throw new Exception("Unsupported discount outcome");
