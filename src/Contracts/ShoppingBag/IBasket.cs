@@ -11,8 +11,10 @@ namespace PriceCalculationExercise.Contracts.ShoppingBag
 
         IReadOnlyList<IDiscount> Discounts { get; }
 
+        IShipping Shipping { get; }
+
         void AddProduct(IProduct product);
-        
+
         void AddProduct(IProduct product, int quantity);
     }
 }

@@ -15,17 +15,20 @@ namespace PriceCalculationExercise.Service.ShoppingBag
         private readonly List<IBasketItem> items;
         public IReadOnlyList<IBasketItem> Items => items;
 
+        public IShipping Shipping { get; }
+
         private readonly List<IDiscount> discounts;
         public IReadOnlyList<IDiscount> Discounts => discounts;
 
-        public Basket(ICustomer customer, List<IDiscount> discounts)
+        public Basket(ICustomer customer, IShipping shipping, List<IDiscount> discounts)
         {
             Customer = customer;
             this.items = new List<IBasketItem>();
+            this.Shipping = shipping;
             this.discounts = discounts ?? throw new Exception("The discounts can not be null. Use the constructor without discount.");
         }
 
-        public Basket(ICustomer customer) : this(customer, new List<IDiscount>())
+        public Basket(ICustomer customer, IShipping shipping) : this(customer, shipping, new List<IDiscount>())
         {
         }
 

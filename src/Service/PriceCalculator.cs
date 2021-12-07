@@ -42,6 +42,10 @@ namespace PriceCalculationExercise.Service
                                     basketMoneyOff += outcomeFunc(0);
 
                                     break;
+                                case ShippingTarget offerTarget:
+                                    basket.Shipping.CalculatedPrice -= outcomeFunc(basket.Shipping.Price);
+
+                                    break;
                                 default:
                                     throw new Exception("Unsupported discount target");
                             }
@@ -53,7 +57,7 @@ namespace PriceCalculationExercise.Service
                 }
             }
 
-            var total = basket.Items.Sum(x => x.CalculatedPrice) - basketMoneyOff;
+            var total = basket.Items.Sum(x => x.CalculatedPrice) + basket.Shipping.CalculatedPrice - basketMoneyOff;
             return total;
         }
 

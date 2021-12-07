@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using Moq;
 using PriceCalculationExercise.Contracts;
+using PriceCalculationExercise.Contracts.ShoppingBag;
 using PriceCalculationExercise.Domain;
 using PriceCalculationExercise.Service.ShoppingBag;
 using Xunit;
@@ -12,6 +13,7 @@ namespace PriceCalculationExercise.UnitTests
     public class BasketTests
     {
         private readonly Mock<ICustomer> customerMock;
+        private readonly Mock<IShipping> shippingMock;
         private readonly IProduct productBread;
         private readonly IProduct productButter;
         private readonly IProduct productMilk;
@@ -19,6 +21,8 @@ namespace PriceCalculationExercise.UnitTests
         public BasketTests()
         {
             customerMock = new Mock<ICustomer>();
+
+            shippingMock = new Mock<IShipping>();
 
             productBread = new Product("Bread", 1.00m);
             productButter = new Product("Butter", 0.80m);
@@ -31,7 +35,7 @@ namespace PriceCalculationExercise.UnitTests
             // Arrange
 
             // Act
-            Action instantiation = () => new Basket(customerMock.Object, null);
+            Action instantiation = () => new Basket(customerMock.Object, shippingMock.Object, null);
 
             // Assert
             instantiation.Should().Throw<Exception>().WithMessage("The discounts can not be null. Use the constructor without discount.");
@@ -41,7 +45,7 @@ namespace PriceCalculationExercise.UnitTests
         public void Should_contain_the_same_items_which_is_added_to_it()
         {
             // Arrange
-            var basket = new Basket(customerMock.Object);
+            var basket = new Basket(customerMock.Object, shippingMock.Object);
 
             // Act
             basket.AddProduct(productBread);
@@ -59,7 +63,7 @@ namespace PriceCalculationExercise.UnitTests
         public void Basket_should_contain_two_item_of_the_same_product_when_a_product_is_added_with_2_quantities()
         {
             // Arrange
-            var basket = new Basket(customerMock.Object);
+            var basket = new Basket(customerMock.Object, shippingMock.Object);
 
             // Act
             basket.AddProduct(productBread, 2);
@@ -73,8 +77,8 @@ namespace PriceCalculationExercise.UnitTests
         public void Basket_items_should_be_immutable()
         {
             // Arrange
-            var b1 = new Basket(customerMock.Object);
-            var b2 = new Basket(customerMock.Object);
+            var b1 = new Basket(customerMock.Object, shippingMock.Object);
+            var b2 = new Basket(customerMock.Object, shippingMock.Object);
             var bread = new Product("Bread", 2);
 
             b1.AddProduct(bread);

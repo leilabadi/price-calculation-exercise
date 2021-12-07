@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
 using PriceCalculationExercise.Contracts;
+using PriceCalculationExercise.Contracts.ShoppingBag;
 using PriceCalculationExercise.Domain;
 using PriceCalculationExercise.Service.ShoppingBag;
 using Xunit;
@@ -10,17 +11,19 @@ namespace PriceCalculationExercise.UnitTests
     public class BasketItemTests
     {
         private readonly Mock<ICustomer> customerMock;
+        private readonly Mock<IShipping> shippingMock;
 
         public BasketItemTests()
         {
             customerMock = new Mock<ICustomer>();
+            shippingMock = new Mock<IShipping>();
         }
 
         [Fact]
         public void DiscountApplied_flag_should_return_true_when_calculated_price_is_set_to_different_price_from_product_price()
         {
             // Arrange
-            var basket = new Basket(customerMock.Object);
+            var basket = new Basket(customerMock.Object, shippingMock.Object);
             basket.AddProduct(new Product("Bread", 1));
 
             // Act
@@ -35,7 +38,7 @@ namespace PriceCalculationExercise.UnitTests
         public void DiscountApplied_flag_should_return_false_when_calculated_price_is_set_to_the_same_price_as_product_price()
         {
             // Arrange
-            var basket = new Basket(customerMock.Object);
+            var basket = new Basket(customerMock.Object, shippingMock.Object);
             basket.AddProduct(new Product("Bread", 1));
 
             // Act
